@@ -1,0 +1,74 @@
+service: auth-test
+
+package:
+  individually: true
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  # memorySizes:
+  #   dev: 128
+  #   next: 128
+  #   prod: 128
+  # memorySize: ${self:custom.memorySizes.${self:custom.stage}}
+  # domains:
+  #   prod: api.[].[]
+  #   next: next-api.[].[]
+  #   dev: dev-api.[].[]
+  # customDomain:
+  #   domainName: ${self:custom.domains.${self:custom.stage}}
+  #   basePath: ""
+  #   stage: ${self:custom.stage}
+  #   createRoute53Record: true
+  # timeout: 3
+
+plugins:
+  - serverless-bundle
+  - serverless-offline
+  # - serverless-domain-manager
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-west-2
+  # To load environment variables externally
+  # rename env.example to .env and uncomment
+  # the following line. Also, make sure to not
+  # commit your .env.
+  #
+  #environment:
+  #  SAMPLE_ENV_VAR: ${env:SAMPLE_ENV_VAR}
+# functions:
+#   xxx:
+#     handler: functions/xxx.handler
+#     memorySize: ${self:custom.memorySize}
+#     timeout: ${self:custom.timeout}
+#     events:
+#       - http:
+#           path: /
+#           method: post
+#           cors: true
+
+# resources:
+#   Resources:
+#     ...
+#   Outputs:
+#     XxxTableName:
+#       Value: ${self:custom.xxxTableName}
+#       Export:
+#         Name: ${self:custom.stage}-xxx-xxx-table-name
+#     XxxTableArn:
+#       Value:
+#         Fn::GetAtt:
+#           - XxxTable
+#           - Arn
+#       Export:
+#         Name: ${self:custom.stage}-xxx-xxx-table-arn
+
+#     ApiGatewayRestApiId:
+#       Value:
+#         Ref: ApiGatewayRestApi
+#       Export:
+#         Name: ${self:custom.stage}-xxx-xxx-api-arn
+

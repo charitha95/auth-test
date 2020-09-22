@@ -1,0 +1,43 @@
+name: "Deploying to next"
+
+on:
+  push:
+    branches:
+      - next
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      # - name: Generate secrets
+      #   run: |
+      #     cat > .env << EOF
+      #     ${{ secrets.XXX_SECRET_KEY }}
+      #     EOF
+
+      - name: Setup node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: c-hive/gha-yarn-cache@v1
+
+      - name: Installing dependencies
+        run: yarn
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "us-west-2"
+
+
+        # env:
+        #   XXX_SECRET_KEY: ${{ secrets.XXX_SECRET_KEY }}
+      - name: Releasing to next
+        run: yarn deploy:next
